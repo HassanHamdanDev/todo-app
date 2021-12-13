@@ -1,87 +1,89 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import useForm from '../../hooks/form.js';
+import ToDoForm from './Form';
+import ToDoList from './List';
+import { Row, Col, Container } from 'react-bootstrap';
+import { SettingContext } from '../../context/settings/context';
+import PaginationPages from '../pagination/Pagination';
 
-import { v4 as uuid } from 'uuid';
-
-const ToDo = () => {
-
+export default function ToDo() {
+  const settings = useContext(SettingContext);
   const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
   const { handleChange, handleSubmit } = useForm(addItem);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   function addItem(item) {
-    console.log(item);
-    item.id = uuid();
     item.complete = false;
     setList([...list, item]);
   }
 
   function deleteItem(id) {
-    const items = list.filter( item => item.id !== id );
+    const items = list.filter((item, index) => index !== id);
     setList(items);
+    setShow(false);
   }
 
   function toggleComplete(id) {
-
-    const items = list.map( item => {
-      if ( item.id == id ) {
-        item.complete = ! item.complete;
+    const items = list.map((item, index) => {
+      if (index == id) {
+        item.complete = !item.complete;
       }
       return item;
     });
-
     setList(items);
-
   }
 
   useEffect(() => {
     let incompleteCount = list.filter(item => !item.complete).length;
     setIncomplete(incompleteCount);
     document.title = `To Do List: ${incomplete}`;
-  }, [list]);
+  });
+
+
+  const indexOfLastPost = currentPage * settings.itemsPerPage;
+  const indexOfFirstPost = indexOfLastPost - settings.itemsPerPage;
+  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
 
   return (
     <>
-      <header>
+
+      <div>
         <h1>To Do List: {incomplete} items pending</h1>
-      </header>
-
-      <form onSubmit={handleSubmit}>
-
-        <h2>Add To Do Item</h2>
-
-        <label>
-          <span>To Do Item</span>
-          <input onChange={handleChange} name="text" type="text" placeholder="Item Details" />
-        </label>
-
-        <label>
-          <span>Assigned To</span>
-          <input onChange={handleChange} name="assignee" type="text" placeholder="Assignee Name" />
-        </label>
-
-        <label>
-          <span>Difficulty</span>
-          <input onChange={handleChange} defaultValue={3} type="range" min={1} max={5} name="difficulty" />
-        </label>
-
-        <label>
-          <button type="submit">Add Item</button>
-        </label>
-      </form>
-
-      {list.map(item => (
-        <div key={item.id}>
-          <p>{item.text}</p>
-          <p><small>Assigned to: {item.assignee}</small></p>
-          <p><small>Difficulty: {item.difficulty}</small></p>
-          <div onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</div>
-          <hr />
-        </div>
-      ))}
-
+      </div>
+      <Container className="mt-2" gap="30">
+        <Row xs={4} md={2} className="g-4">
+          <Col>
+            <ToDoForm handleSubmit={handleSubmit} handleChange={handleChange} />
+          </Col>
+          <Col>
+            <ToDoList
+              incomplete={incomplete}
+              list={currentPosts}
+              toggleComplete={toggleComplete}
+              deleteItem={deleteItem}
+              show={show}
+              handleShow={handleShow}
+              handleClose={handleClose}
+            />
+            <PaginationPages
+              itemsPerPage={settings.itemsPerPage}
+              totalList={list.length}
+              paginate={paginate}
+            />
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };
 
-export default ToDo;
+
