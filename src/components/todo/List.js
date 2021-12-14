@@ -1,14 +1,14 @@
 import { Checkbox } from '@blueprintjs/core';
 import React from 'react';
 import { Card, Button, Modal, CloseButton, Badge } from 'react-bootstrap';
+import './list.scss';
 
 export default function ToDoList(props) {
 
     return (
-        <div>
+        <div >
             {props.list.map((item, index) => (
-                <Card key={index} className="mt-3">
-                    <CloseButton onClick={props.handleShow} />
+                <Card key={index} className="mt-2 card">
                     <Modal show={props.show} onHide={props.handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title>Are You Sure ?!</Modal.Title>
@@ -23,17 +23,17 @@ export default function ToDoList(props) {
                         </Modal.Footer>
                     </Modal>
                     <Card.Header>
-                        <Badge pill bg={item.complete ? "success" : "danger"}>
-                            {item.complete ? "Complete" : "incomplete"}
+                        <Badge style={{ float: 'left' }} pill bg={item.complete ? "success" : "danger"}>
+                            <h5 style={{ fontFamily: 'cursive' }}>{item.complete ? "Complete" : "incomplete"}</h5>
                         </Badge>
-                        <br />
-                        Assigned to:{item.assignee}
+                        <CloseButton style={{ float: 'right' }} onClick={props.handleShow} />
+                        <h5 style={{ float: 'left', margin: 10 }}>  Assigned to : {item.assignee}  </h5>
                     </Card.Header>
-                    <Card.Body>
+                    <Card.Body className="card">
                         <Card.Title>{item.text}</Card.Title>
-                        <Checkbox variant="primary" onClick={() => props.toggleComplete(index)}> Complete: {item.complete.toString()}</Checkbox>
+                        <Checkbox checked={item.complete} variant="primary" onClick={() => props.toggleComplete(index)}><strong>Complete: {item.complete.toString()}</strong> </Checkbox>
                     </Card.Body>
-                    <Card.Footer className="text-muted">Difficulty: {item.difficulty}</Card.Footer>
+                    <Card.Footer className="text-muted"><strong>Difficulty: {item.difficulty}</strong></Card.Footer>
                 </Card>
             ))}
         </div>
