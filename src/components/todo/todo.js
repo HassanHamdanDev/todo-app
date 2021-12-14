@@ -5,10 +5,10 @@ import ToDoList from './List';
 import { Row, Col, Container } from 'react-bootstrap';
 import { SettingContext } from '../../context/settings/context';
 import PaginationPages from '../pagination/Pagination';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ToDo() {
   const settings = useContext(SettingContext);
-  const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
   const { handleChange, handleSubmit } = useForm(addItem);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,48 +18,54 @@ export default function ToDo() {
   const handleShow = () => setShow(true);
 
   function addItem(item) {
+    item.id = uuidv4();
     item.complete = false;
-    setList([...list, item]);
+    const saveList = settings.list;
+    settings.setList([...saveList, item]);
   }
 
   function deleteItem(id) {
-    const items = list.filter((item, index) => index !== id);
-    setList(items);
+    const items = settings.list.filter((item, index) => index !== id);
+    settings.setList(items);
     setShow(false);
   }
 
   function toggleComplete(id) {
-    const items = list.map((item, index) => {
+    const items = settings.list.map((item, index) => {
       if (index == id) {
         item.complete = !item.complete;
       }
       return item;
     });
-    setList(items);
+    settings.setList(items);
   }
 
   useEffect(() => {
-    let incompleteCount = list.filter(item => !item.complete).length;
+    let incompleteCount = settings.list.filter(item => !item.complete).length;
     setIncomplete(incompleteCount);
     document.title = `To Do List: ${incomplete}`;
   });
 
+  function getToDo() {
+    const indexOfLastPost = currentPage * settings.itemsPerPage;
+    const indexOfFirstPost = indexOfLastPost - settings.itemsPerPage;
+    const currentPosts = settings.list.slice(indexOfFirstPost, indexOfLastPost);
 
-  const indexOfLastPost = currentPage * settings.itemsPerPage;
-  const indexOfFirstPost = indexOfLastPost - settings.itemsPerPage;
-  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost);
-
+    if (!settings.displayComplete) {
+      return currentPosts.filter(item => item.complete === settings.displayComplete);
+    } else {
+      return currentPosts;
+    }
+  }
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-
   return (
     <>
-
       <div>
         <h1>To Do List: {incomplete} items pending</h1>
       </div>
-      <Container className="mt-2" gap="30">
+      <Container className="mt-1" gap="30">
         <Row xs={4} md={2} className="g-4">
           <Col>
             <ToDoForm handleSubmit={handleSubmit} handleChange={handleChange} />
@@ -67,7 +73,7 @@ export default function ToDo() {
           <Col>
             <ToDoList
               incomplete={incomplete}
-              list={currentPosts}
+              list={getToDo()}
               toggleComplete={toggleComplete}
               deleteItem={deleteItem}
               show={show}
@@ -76,7 +82,7 @@ export default function ToDo() {
             />
             <PaginationPages
               itemsPerPage={settings.itemsPerPage}
-              totalList={list.length}
+              totalList={settings.list.length}
               paginate={paginate}
             />
           </Col>
