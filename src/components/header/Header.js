@@ -6,12 +6,13 @@ import './header.scss';
 export default function Header() {
     return (
         <>
-            <Navbar bg="dark" variant="dark">
+            <Navbar className='header' bg="primary" variant="dark">
                 <Container>
-                    <Navbar.Brand href="#home">To Do List </Navbar.Brand>
-                    <Nav className="me-auto">
-                        <Nav.Link ><Link className='link' to="/">Home</Link></Nav.Link>
-                        <Nav.Link ><Link className='link' to="/settings">Settings</Link></Nav.Link>
+                    <Navbar.Brand href="/">To Do List </Navbar.Brand>
+                    <Nav className="me-auto" style={{ float: 'right' }}>
+                        <Link className='link' to="/">Home</Link>
+                        <Link className='link' to="/settings">Settings</Link>
+                        <Link className='link' to="/login">Login</Link>
                     </Nav>
                 </Container>
             </Navbar>

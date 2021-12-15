@@ -29,9 +29,9 @@ export default function ToDoList(props) {
                         <CloseButton style={{ float: 'right' }} onClick={props.handleShow} />
                         <h5 style={{ float: 'left', margin: 10 }}>  Assigned to : {item.assignee}  </h5>
                     </Card.Header>
-                    <Card.Body className="card">
+                    <Card.Body >
                         <Card.Title>{item.text}</Card.Title>
-                        <Checkbox checked={item.complete} variant="primary" onClick={() => props.toggleComplete(index)}><strong>Complete: {item.complete.toString()}</strong> </Checkbox>
+                        <Checkbox style={{ float: 'right' }} checked={item.complete} variant="primary" onClick={() => props.toggleComplete(index)}><strong>Complete: {item.complete.toString()}</strong> </Checkbox>
                     </Card.Body>
                     <Card.Footer className="text-muted"><strong>Difficulty: {item.difficulty}</strong></Card.Footer>
                 </Card>
