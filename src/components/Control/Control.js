@@ -12,7 +12,7 @@ export default function Control() {
         <Container>
             <Row className="control">
                 <Col>
-                    <label><strong>Item Count</strong></label>
+                    <label><strong>Items Per Page</strong></label>
                     <input
                         type="number"
                         min="1"

@@ -1,4 +1,7 @@
 .card {
-    border: 2px groove;
-    box-shadow: 1px 1px 2px 1px rgb(53, 68, 68);
+    border: 3px groove;
+    padding-left: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px rgb(255, 255, 255);
 }

@@ -62,15 +62,15 @@ export default function ToDo() {
 
   return (
     <>
-      <div>
-        <h1>To Do List: {incomplete} items pending</h1>
-      </div>
       <Container className="mt-1" gap="30">
         <Row xs={4} md={2} className="g-4">
           <Col>
             <ToDoForm handleSubmit={handleSubmit} handleChange={handleChange} />
           </Col>
           <Col>
+            <div>
+              <h1 style={{ fontFamily: 'cursive' }}>To Do List: {incomplete} items pending</h1>
+            </div>
             <ToDoList
               incomplete={incomplete}
               list={getToDo()}
