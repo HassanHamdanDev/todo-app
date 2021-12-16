@@ -48,8 +48,7 @@ export default class Login extends React.Component {
                         </div>
                     </div>
                 </When>
-                <When condition={this.context.LoggedIn}
-                >
+                <When condition={this.context.LoggedIn}>
                     <div>
                         {this.context.user.username}
                     </div>

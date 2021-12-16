@@ -25,14 +25,14 @@ export default class App extends React.Component {
             <Header />
             <Switch>
               <Route exact path="/">
-                {/* <Authrize> */}
+                <Authrize>
                   <ToDo />
-                {/* </Authrize> */}
+                </Authrize>
               </Route>
               <Route path="/settings">
-                {/* <Authrize> */}
+                <Authrize>
                   <Control />
-                {/* </Authrize> */}
+                </Authrize>
               </Route>
               <Route path="/login">
                 <Login />
